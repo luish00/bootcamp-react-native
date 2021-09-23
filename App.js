@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,32 +18,37 @@ import {
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import FatButton from './src/componets/commons/FatButton';
+import TextInputWithLabel
+  from './src/componets/commons/TextInputWithLabel';
 
 const styles = StyleSheet.create({
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  main: {
+    backgroundColor: '#fff',
+    padding: 18,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+
+  labelTitle: {
+    color: 'red',
   },
 });
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const [title, setTitle] = useState('');
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   function onClick() {
-    console.warn('eup');
+    
   }
+
+  function onChange(value) {
+    setTitle(value);
+  }
+
+  console.log('titulo', title)
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -51,7 +56,14 @@ const App = () => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <View>
+        <View style={styles.main}>
+          <TextInputWithLabel
+            label="Title"
+            labelClass={styles.labelTitle}
+            onChange={onChange}
+            value={title}
+          />
+
           <FatButton onPress={onClick} />
         </View>
       </ScrollView>
