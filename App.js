@@ -8,6 +8,7 @@
 
 import React, { useState } from 'react';
 import {
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -15,59 +16,27 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import FatButton from './src/componets/commons/FatButton';
-import TextInputWithLabel
-  from './src/componets/commons/TextInputWithLabel';
+import LoginScreen from './src/screen/LoginScreen';
+import HomeScreen from './src/screen/HomeScreen';
 
 const styles = StyleSheet.create({
-  main: {
-    backgroundColor: '#fff',
-    padding: 18,
-  },
 
-  labelTitle: {
-    color: 'red',
-  },
 });
 
+const Stack = createNativeStackNavigator();
+
+
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [title, setTitle] = useState('');
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  function onClick() {
-    
-  }
-
-  function onChange(value) {
-    setTitle(value);
-  }
-
-  console.log('titulo', title)
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View style={styles.main}>
-          <TextInputWithLabel
-            label="Title"
-            labelClass={styles.labelTitle}
-            onChange={onChange}
-            value={title}
-          />
-
-          <FatButton onPress={onClick} />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
