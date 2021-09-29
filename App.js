@@ -21,6 +21,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from './src/screen/LoginScreen';
 import HomeScreen from './src/screen/HomeScreen';
+import RegistrarScreen from './src/screen/RegistrarScreen';
 
 const styles = StyleSheet.create({
 
@@ -34,7 +35,10 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
+
         <Stack.Screen name="Home" component={HomeScreen} />
+
+        <Stack.Screen name="Registrar" component={RegistrarScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
