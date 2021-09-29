@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
+  Text,
+  TouchableNativeFeedback,
   useColorScheme,
   View,
 } from 'react-native';
@@ -29,10 +31,17 @@ const styles = StyleSheet.create({
   labelTitle: {
     color: '#1a237e',
   },
+
+  btnRegistrar: {
+    height: 40,
+    marginTop: 16,
+    textAlign: 'center',
+  },
 });
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = (props) => {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(null);
   const [password, setPassword] = useState('');
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -40,12 +49,37 @@ const LoginScreen = ({ navigation }) => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  // Los efectos se ejecutan cada vez que algun valor de su array de dependencias cambia
+  // @link https://es.reactjs.org/docs/hooks-reference.html#useeffect
+  useEffect(() => {
+    if (email.length === 0) {
+      setEmailError('');
+      return;
+    }
+
+    // Validación que se ejecurara cada vez que se tipee una nueva letra en el campo de email
+    // if (!email.includes('@')) {
+    //   setEmailError('@ requerido');
+    // } else {
+    //   setEmailError('');
+    // }
+  }, [email]);
+
   function onPressLogin() {
-    navigation.navigate('Home');
+    props.navigation.navigate('Home');
   }
 
   function onChangeEmail(value) {
     setEmail(value);
+  }
+
+  function onBlurEmail() {
+    // Validación del correo cuando el input pierde el "foco"
+    if (!email.includes('@')) {
+      setEmailError('@ requerido');
+    } else {
+      setEmailError('');
+    }
   }
 
   function onChangePassword(value) {
@@ -62,11 +96,12 @@ const LoginScreen = ({ navigation }) => {
             <Image style={styles.logo} source={{ uri: 'https://tecnogeek.net/wp-content/uploads/2016/07/Pokemon-GO.jpg.webp' }} />
 
             <TextInputWithLabel
-              error=""
+              error={emailError}
               keyboardType="email-address"
               label="Correo electronico"
               labelClass={styles.labelTitle}
               onChange={onChangeEmail}
+              onBlur={onBlurEmail}
               placeholder="ejemplo@gmail.com"
               value={email}
             />
@@ -82,6 +117,10 @@ const LoginScreen = ({ navigation }) => {
             />
 
             <PrimaryButton onPress={onPressLogin} text="Login" />
+
+            <TouchableNativeFeedback>
+              <Text style={styles.btnRegistrar}>Registrate</Text>
+            </TouchableNativeFeedback>
           </View>
         </ScrollView>
       </>

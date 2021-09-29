@@ -35,6 +35,7 @@ const TextInputWithLabel = ({
   keyboardType = 'default',
   label = '',
   labelClass = {},
+  onBlur,
   onChange,
   placeholder = '',
   secureTextEntry = false,
@@ -47,6 +48,7 @@ const TextInputWithLabel = ({
       <TextInput
         style={[styles.input, error && styles.inputError]}
         onChangeText={onChange}
+        onBlur={onBlur}
         value={value}
         keyboardType={keyboardType}
         placeholder={placeholder}
