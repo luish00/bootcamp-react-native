@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const LoginScreen = (props) => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(null);
   const [password, setPassword] = useState('');
@@ -54,23 +54,24 @@ const LoginScreen = (props) => {
   useEffect(() => {
     if (email.length === 0) {
       setEmailError('');
-      return;
     }
 
-    // Validación que se ejecurara cada vez que se tipee una nueva letra en el campo de email
-    // if (!email.includes('@')) {
-    //   setEmailError('@ requerido');
-    // } else {
-    //   setEmailError('');
-    // }
   }, [email]);
 
   function onPressLogin() {
-    props.navigation.navigate('Home');
+    navigation.navigate('Home');
+  }
+
+  function onPressRegistar() {
+    navigation.navigate('Registrar');
   }
 
   function onChangeEmail(value) {
     setEmail(value);
+  }
+
+  function onChangePassword(value) {
+    setPassword(value);
   }
 
   function onBlurEmail() {
@@ -80,10 +81,6 @@ const LoginScreen = (props) => {
     } else {
       setEmailError('');
     }
-  }
-
-  function onChangePassword(value) {
-    setPassword(value);
   }
 
   return (
@@ -118,7 +115,7 @@ const LoginScreen = (props) => {
 
             <PrimaryButton onPress={onPressLogin} text="Login" />
 
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={onPressRegistar}>
               <Text style={styles.btnRegistrar}>Registrate</Text>
             </TouchableNativeFeedback>
           </View>

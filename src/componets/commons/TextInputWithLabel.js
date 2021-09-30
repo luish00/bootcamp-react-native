@@ -36,7 +36,8 @@ const TextInputWithLabel = ({
   label = '',
   labelClass = {},
   onBlur,
-  onChange,
+  onChange = () => { },
+  onFocus = () => { },
   placeholder = '',
   secureTextEntry = false,
   value = '',
@@ -49,10 +50,11 @@ const TextInputWithLabel = ({
         style={[styles.input, error && styles.inputError]}
         onChangeText={onChange}
         onBlur={onBlur}
+        onFocus={onFocus}
         value={value}
         keyboardType={keyboardType}
         placeholder={placeholder}
-        secureTextEntry={secureTextEntry  }
+        secureTextEntry={secureTextEntry}
       />
 
       <Text style={styles.error}>{error}</Text>
