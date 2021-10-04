@@ -15,6 +15,9 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import TextInputWithLabel from '../componets/commons/TextInputWithLabel';
 import PrimaryButton from '../componets/commons/PrimaryButton';
 
+import { storeData, getData } from '../utils/storage';
+import { TOKEN } from '../utils/storage.key';
+
 const styles = StyleSheet.create({
   logo: {
     height: 200,
@@ -49,16 +52,32 @@ const LoginScreen = ({ navigation }) => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  useEffect(() => {
+    async function init() {
+      const token = await getData(TOKEN);
+
+      if (token) {
+        navigation.navigate('Home');
+      }
+    }
+
+    init();
+  }, []);
+
   // Los efectos se ejecutan cada vez que algun valor de su array de dependencias cambia
   // @link https://es.reactjs.org/docs/hooks-reference.html#useeffect
   useEffect(() => {
     if (email.length === 0) {
       setEmailError('');
     }
-
   }, [email]);
 
   function onPressLogin() {
+    storeData({
+      key: TOKEN,
+      value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+    });
+
     navigation.navigate('Home');
   }
 
