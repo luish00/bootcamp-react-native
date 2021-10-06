@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  FlatList,
   Image,
+  ScrollView,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import EmptyList from '../componets/home/EmptyList';
+import FooterList from '../componets/home/FooterList';
 import PrimaryButton from '../componets/commons/PrimaryButton';
 
 const URL_BASE = 'https://api.thecatapi.com/v1';
@@ -33,18 +37,23 @@ const Loading = ({ isLoading }) => {
   );
 };
 
+const LIMIT = 5;
+const PAGE = 1;
+
 const HomeScreen = ({ navigation }) => {
   const { height } = useWindowDimensions();
   const [isLoading, setLoading] = useState(false);
-  const [data, setData] = useState({ url: '', id: '' });
-  let otroData = {};
+  const [data, setData] = useState([]);
+  const [limit, setLimit] = useState(5);
+  const [page, setPage] = useState(1);
 
   function onLogout() {
     AsyncStorage.clear();
     navigation.navigate('Login');
   }
 
-  async function get() {
+  // @deprecate
+  async function getOne() {
     setLoading(true);
     const request = await fetch(`${URL_BASE}/${GET_IMG}`);
     const response = await request.json();
@@ -63,11 +72,24 @@ const HomeScreen = ({ navigation }) => {
     setLoading(false);
   }
 
-  useEffect(() => {
-    get();
-  }, []);
+  async function getAll() {
+    setLoading(true);
+    const query = `?limit=${limit}&page=${page}&order=Desc`;
+    const request = await fetch(`${URL_BASE}/${GET_IMG}${query}`);
+    const response = await request.json();
 
-  console.log('data', data)
+    if (request.ok) {
+      setData(response);
+    } else {
+      console.log('request no ok');
+    }
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getAll();
+  }, []);
 
   function renderLoading() {
     if (isLoading) {
@@ -77,16 +99,42 @@ const HomeScreen = ({ navigation }) => {
     return null;
   }
 
+  function renderList() {
+    if (data.length === 0) {
+      return null;
+    }
+
+    return data.map(item => (
+      <Image style={styles.img} source={{ uri: item.url }} />
+    ));
+  }
+
+  function renderItem({ item }) {
+    return <Image style={styles.img} source={{ uri: item.url }} />;
+  }
+
+  function keyExtractor(item) {
+    return item.id;
+  }
+
+  console.warn('loading', isLoading)
+
   return (
-    <View style={{ height }}>
+    <View>
       {/* funcion */}
       {/* {renderLoading()} */}
       {/* inline */}
-      {/* {isLoading ? <ActivityIndicator size="small" color="#0000ff" /> : null} */}
+      {isLoading ? <ActivityIndicator size="small" color="#0000ff" /> : null}
       {/* new component (local) */}
-      <Loading isLoading={isLoading} />
+      {/* <Loading isLoading={isLoading} /> */}
 
-      {data.url ? <Image style={styles.img} source={{ uri: data.url }} /> : null}
+      <FlatList
+        data={data}
+        ListEmptyComponent={EmptyList}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        ListFooterComponent={FooterList}
+      />
 
       <PrimaryButton text="Logout" onPress={onLogout} />
     </View>
